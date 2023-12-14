@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="symboltable">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/symboltable.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/symboltable.jar!/" />
+    </SOURCES>
+  </library>
+</component>

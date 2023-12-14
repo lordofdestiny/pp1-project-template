@@ -1,0 +1,159 @@
+package rs.ac.bg.etf.pp1;
+
+import java_cup.runtime.*;
+import rs.ac.bg.etf.pp1.ast.*;
+import org.apache.log4j.*;
+import java.util.Optional;
+
+parser code {:
+
+    Logger log = Logger.getLogger(getClass());
+    private boolean hadError = false;
+
+    public Optional<Symbol> parse_safe() {
+        try{
+            Symbol tree = parse();
+            if (hadError) return Optional.empty();
+            return Optional.of(tree);
+        }catch(Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    // slede redefinisani metodi za prijavu grešaka radi izmene teksta prouke
+    public void syntax_error(Symbol curr_token) {
+        report_error("Syntax error ", curr_token);
+    }
+
+    public void unrecovered_syntax_error(Symbol curr_token) throws java.lang.Exception {
+        report_fatal_error("Fatal error, parsing can't be continued ", curr_token);
+    }
+
+    public void report_error(String message, Object info) {
+        hadError = true;
+        StringBuilder msg = new StringBuilder(message);
+        if(info instanceof Symbol) {
+            msg.append("on line ").append(((Symbol)info).left);
+        }
+        log.error(msg.toString());
+    }
+
+    public void report_fatal_error(String message, Object info) throws java.lang.Exception {
+        done_parsing();
+        report_error(message, info);
+    }
+:}
+
+scan with {:
+    Symbol s = this.getScanner().next_token();
+    if(s != null  & s.value != null) {
+        log.trace (s.toString() + " " + s.value.toString());
+    }
+    return s;
+:}
+
+terminal PROG, LBRACE, RBRACE, SEMI, LPAREN, RPAREN, EQUAL, RETURN , PLUS, PRINT, COMMA, VOID;
+terminal Integer NUMBER;
+terminal String IDENT;
+terminal IF, ELSE;
+
+nonterminal VarDeclList, MethodDeclList, VarDecl;
+nonterminal FormPars, StatementList, FormalParamList, FormalParamDecl, Statement;
+nonterminal  Addop, ActualPars, ActualParamList;
+nonterminal Matched, Unmatched;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program, MethodTypeName, MethodDecl, Designator;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Term, Factor, Expr;
+
+Program ::= (Program) PROG ProgName:name VarDeclList LBRACE MethodDeclList RBRACE;
+
+ProgName ::= (ProgName) IDENT:progName;
+
+VarDeclList ::= (VarDeclarations) VarDeclList VarDecl
+            |
+            (NoVarDecl) /* epsilon */
+            ;
+
+VarDecl ::= (VarDecl) Type:varType IDENT:varName SEMI;
+
+Type ::= (Type) IDENT:typeName;
+
+MethodDeclList ::= (MethodDeclarations) MethodDeclList MethodDecl
+                |
+                (NoMethodDecl) /* epsilon */
+                ;
+
+MethodDecl ::= (MethodDecl) MethodTypeName LPAREN FormPars RPAREN VarDeclList LBRACE StatementList RBRACE;
+
+MethodTypeName ::= (MethodTypeName) Type:retType IDENT:methodName;
+
+FormPars ::= (FormParams) FormalParamList
+            |
+            (NoFormParam) /* epsilon */
+            ;
+
+FormalParamList ::= (FormalParamDecls) FormalParamList COMMA FormalParamDecl
+                |
+                (SingleFormalParamDecl) FormalParamDecl
+                ;
+
+StatementList ::= (Statements) StatementList Statement
+                |
+                (NoStmt) /* epsilon */
+                ;
+
+Statement ::= (MatchedStmt) Matched
+            |
+            (UnmatchedStmt) Unmatched
+            ;
+
+Unmatched ::= (UnmatchedIf) IF Expr Statement
+            |
+            (UnmatchedIfElse) IF Expr Matched ELSE Unmatched
+            ;
+
+Matched ::= (Assignment) Designator:dest EQUAL Expr:e SEMI
+            |
+            (ErrorStmt) error SEMI:l
+            {: parser.report_error("Recovered from error up to the next ';' in line " + lleft, null ); :}
+            |
+            (PrintStmt) PRINT LPAREN Expr RPAREN SEMI
+            |
+            (ReturnExpr) RETURN Expr:t SEMI
+            |
+            (ReturnNoExpr) RETURN SEMI
+            |
+            (MatchedStatement) IF Expr Matched ELSE Matched
+            |
+            (ProcCall) Designator:func LPAREN ActualPars RPAREN SEMI
+            ;
+
+
+
+Expr ::= (AddExpr) Expr:te Addop Term:t
+      |
+      (TermExpr) Term:t
+      ;
+
+Term ::= (Term) Factor:t;
+
+Factor ::= (Const) NUMBER
+        |
+        (Var) Designator
+        |
+        (FuncCall) Designator:func LPAREN ActualPars RPAREN
+        ;
+
+ActualPars ::= (Actuals) ActualParamList
+            |
+            (NoActual) /* epsilon */
+            ;
+
+ActualParamList ::= (ActualParams) ActualParamList COMMA Expr
+                |
+                (ActualParam) Expr
+                ;
+
+Designator ::= (Designator) IDENT:name;
+
+Addop ::= (Addop) PLUS;

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MJCompiler" default="compile" basedir=".">
+    <property name="pp1Dir" value="src/rs/ac/bg/etf/pp1"/>
+
+    <target name="delete">
+        <delete>
+            <!-- Delete generated lexer/parser-->
+            <fileset dir="${pp1Dir}">
+                <include name="sym.java"/>
+                <include name="MJParser.java"/>
+                <include name="Yylex.java"/>
+            </fileset>
+            <!-- Delete AST-->
+            <fileset dir="${pp1Dir}/ast" erroronmissingdir="false"/>
+            <dirset dir="${pp1Dir}/ast" erroronmissingdir="false"/>
+            <!-- Delete mjparser_astbuild.cup -->
+            <fileset dir="spec">
+                <exclude name="mjlexer.lex"/>
+                <exclude name="mjparser.cup"/>
+            </fileset>
+            <!-- Delete output dir-->
+            <fileset dir="out" erroronmissingdir="false"/>
+            <dirset dir="out" erroronmissingdir="false"/>
+        </delete>
+    </target>
+
+    <target name="lexerGen">
+        <java jar="lib/JFlex.jar" fork="true">
+            <arg value="-d"/>
+            <arg value="./${pp1Dir}"/>
+            <arg value="spec/mjlexer.lex"/>
+        </java>
+    </target>
+
+    <target name="parserGen">
+        <java jar="lib/cup_v10k.jar" fork="true">
+            <arg value="-destdir"/>
+            <arg value="src/rs/ac/bg/etf/pp1"/>
+            <arg value="-ast"/>
+            <arg value="src.rs.ac.bg.etf.pp1.ast"/>
+            <arg value="-parser"/>
+            <arg value="MJParser"/>
+            <arg value="-buildtree"/>
+            <arg value="-dump_states"/>
+            <arg value="spec/mjparser.cup"/>
+        </java>
+
+        <!-- Replaces all the references to the old package name in files in the "src" directory -->
+        <replace dir="src" value="rs.ac.bg.etf.pp1.ast" token="src.rs.ac.bg.etf.pp1.ast" summary="true"/>
+    </target>
+
+    <target name="compile">
+        <antcall target="delete"/>
+        <antcall target="parserGen"/>
+        <antcall target="lexerGen"/>
+
+        <mkdir dir="out/production/ujavac"/>
+        <javac srcdir="src" includedestclasses="true" destdir="out/production/ujavac"
+               includeantruntime="false">
+            <classpath>
+                <fileset dir="lib"/>
+            </classpath>
+        </javac>
+        <copy file="config/log4j.xml" todir="out/production/ujavac"/>
+    </target>
+</project>
