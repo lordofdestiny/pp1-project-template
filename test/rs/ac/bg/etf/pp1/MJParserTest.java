@@ -1,9 +1,10 @@
 package rs.ac.bg.etf.pp1;
 
-import java_cup.runtime.Symbol;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import rs.ac.bg.etf.pp1.ast.Program;
+import rs.ac.bg.etf.pp1.exception.ParseException;
+import rs.ac.bg.etf.pp1.exception.UnexpectedSymbolException;
 import rs.ac.bg.etf.pp1.util.Log4JUtils;
 
 import java.io.*;
@@ -12,12 +13,6 @@ public class MJParserTest {
     static {
         DOMConfigurator.configure(Log4JUtils.instance().findLoggerConfigFile());
         Log4JUtils.instance().prepareLogFile(Logger.getRootLogger());
-    }
-
-    static class ParseException extends Exception {
-        ParseException() {
-            super("Input program had syntax errors.");
-        }
     }
 
     public static void main(String[] args) throws Exception {
@@ -32,11 +27,7 @@ public class MJParserTest {
             Yylex lexer = new Yylex(br);
 
             MJParser parser = new MJParser(lexer);
-            Symbol ast = parser.parse_safe().orElseThrow(
-                    () -> new ParseException()
-            );
-
-            Program prog = (Program) (ast.value);
+            Program prog = parser.parse_or_throw();
 
             log.info(prog.toString(""));
             log.info("=".repeat(30));
@@ -47,14 +38,19 @@ public class MJParserTest {
             log.info("Print calls count: " + v.printCallCount);
             log.info("Declared variables count: " + v.varDeclCount);
         } catch (ParseException pe) {
+            System.exit(20);
+        } catch (UnexpectedSymbolException us) {
+            System.exit(10);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            System.exit(1);
         } finally {
             if (br != null) {
                 try {
                     br.close();
                 } catch (IOException e) {
                     log.error(e.getMessage(), e);
+                    System.exit(2);
                 }
             }
         }

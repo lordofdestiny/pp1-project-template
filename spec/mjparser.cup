@@ -1,22 +1,27 @@
 package rs.ac.bg.etf.pp1;
 
-import java_cup.runtime.*;
-import rs.ac.bg.etf.pp1.ast.*;
-import org.apache.log4j.*;
 import java.util.Optional;
+
+import java_cup.runtime.*;
+import org.apache.log4j.*;
+
+import rs.ac.bg.etf.pp1.ast.*;
+import rs.ac.bg.etf.pp1.exception.*;
 
 parser code {:
 
     Logger log = Logger.getLogger(getClass());
     private boolean hadError = false;
 
-    public Optional<Symbol> parse_safe() {
-        try{
+    public Program parse_or_throw() throws UnexpectedSymbolException, ParseException, Exception {
+        try {
             Symbol tree = parse();
-            if (hadError) return Optional.empty();
-            return Optional.of(tree);
-        }catch(Exception e) {
-            return Optional.empty();
+            if (hadError || tree == null || tree.value.getClass() != Program.class) throw new ParseException();
+            return (Program) tree.value;
+        } catch (UnexpectedSymbolException e) {
+            throw e;
+        } catch (Exception e) {
+            throw e;
         }
     }
 
@@ -46,7 +51,10 @@ parser code {:
 
 scan with {:
     Symbol s = this.getScanner().next_token();
-    if(s != null  & s.value != null) {
+    if(s!= null && s.sym == sym.error) {
+        throw new UnexpectedSymbolException();
+    }
+    if(s != null && s.value != null) {
         log.trace (s.toString() + " " + s.value.toString());
     }
     return s;

@@ -5,7 +5,7 @@
     <option name="MAIN_CLASS_NAME" value="rs.ac.bg.etf.pp1.MJParserTest" />
     <module name="ujavac" />
     <method v="2">
-      <option name="AntTarget" enabled="true" antfile="file://$PROJECT_DIR$/build.xml" target="compile" />
+      <option name="AntTarget" enabled="true" antfile="file://$PROJECT_DIR$/build.xml" target="compile-src" />
       <option name="Make" enabled="true" />
     </method>
   </configuration>

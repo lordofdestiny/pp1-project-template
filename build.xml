@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="MJCompiler" default="compile" basedir=".">
+<project name="MJCompiler" default="compile-src" basedir=".">
     <property name="pp1Dir" value="src/rs/ac/bg/etf/pp1"/>
 
-    <target name="delete">
+    <target name="clean">
         <delete>
             <!-- Delete generated lexer/parser-->
             <fileset dir="${pp1Dir}">
@@ -49,10 +49,7 @@
         <replace dir="src" value="rs.ac.bg.etf.pp1.ast" token="src.rs.ac.bg.etf.pp1.ast" summary="true"/>
     </target>
 
-    <target name="compile">
-        <antcall target="delete"/>
-        <antcall target="parserGen"/>
-        <antcall target="lexerGen"/>
+    <target name="compile-src" depends="clean,parserGen, lexerGen">
 
         <mkdir dir="out/production/ujavac"/>
         <javac srcdir="src" includedestclasses="true" destdir="out/production/ujavac"
@@ -65,7 +62,7 @@
         <copy file="config/log4j.xml" todir="out/production/ujavac"/>
     </target>
 
-    <target name="disassemble">
+    <target name="disassemble-program">
         <java classname="rs.etf.pp1.mj.runtime.disasm">
             <arg value="test/obj/program.obj"/>
             <arg value="-Djava.security.manager=allow"/>
@@ -75,14 +72,25 @@
         </java>
     </target>
 
-    <target name="run">
+    <target name="run-program">
         <java classname="rs.etf.pp1.mj.runtime.Run">
             <arg value="-Djava.security.manager=allow"/>
             <arg value="test/obj/program.obj"/>
-            <arg value="-debug"/>
             <classpath>
                 <pathelement location="lib/mj-runtime.jar"/>
             </classpath>
         </java>
     </target>
+
+    <target name="debug-program">
+        <java classname="rs.etf.pp1.mj.runtime.Run">
+            <arg value="-Djava.security.manager=allow"/>
+            <arg value="test/obj/program.obj"/>
+             <arg value="-debug"/>
+            <classpath>
+                <pathelement location="lib/mj-runtime.jar"/>
+            </classpath>
+        </java>
+    </target>
+
 </project>

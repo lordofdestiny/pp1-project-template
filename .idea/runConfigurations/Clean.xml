@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Clean" type="AntRunConfiguration">
+    <antsettings antfile="file://$PROJECT_DIR$/build.xml" target="clean" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -1,7 +1,6 @@
 program MJProgram
     int x; int y;
 {
-
     int k() int c;  {
         c = 2;
         print(0);
@@ -24,4 +23,4 @@ program MJProgram
 
         return 0;
     }
- }
+}
