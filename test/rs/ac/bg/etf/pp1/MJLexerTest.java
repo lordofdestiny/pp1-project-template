@@ -33,7 +33,15 @@ public class MJLexerTest {
             Yylex lexer = new Yylex(br);
             Symbol currToken = null;
             while ((currToken = lexer.next_token()).sym != sym.EOF) {
-                if (currToken != null && currToken.value != null)
+                if(currToken == null){
+                    continue;
+                }
+
+                if(currToken.sym == sym.error){
+                    System.exit(10);
+                }
+
+                if (currToken.value != null)
                     log.info(currToken.toString() + " " + currToken.value.toString());
             }
         } catch (Exception e) {

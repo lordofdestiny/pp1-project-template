@@ -1,9 +1,13 @@
 package rs.ac.bg.etf.pp1;
+
 import java_cup.runtime.Symbol;
+import org.apache.log4j.Logger;
 
 %%
 
 %{
+    Logger log = Logger.getLogger(getClass());
+
     private Symbol new_symbol(int type) {
         return new Symbol(type, yyline + 1, yycolumn);
     }
@@ -55,4 +59,7 @@ import java_cup.runtime.Symbol;
 [0-9]+          {return new_symbol(sym.NUMBER, Integer.valueOf(yytext())); }
 [a-zA-Z][_a-zA-Z0-9]*      { return new_symbol(sym.IDENT, yytext()); }
 
-.   { System.err.println("Unrecognized symbol (" + yytext() + ") on line " + (yyline+1)); }
+.   {
+        log.error("Unexpected symbol (" + yytext() + ") on line " + (yyline+1));
+        return new_symbol(sym.error, yytext());
+    }
