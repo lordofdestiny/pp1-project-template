@@ -57,10 +57,32 @@
         <mkdir dir="out/production/ujavac"/>
         <javac srcdir="src" includedestclasses="true" destdir="out/production/ujavac"
                includeantruntime="false">
+            <compilerarg value="-g:source,lines,vars"/>
             <classpath>
                 <fileset dir="lib"/>
             </classpath>
         </javac>
         <copy file="config/log4j.xml" todir="out/production/ujavac"/>
+    </target>
+
+    <target name="disassemble">
+        <java classname="rs.etf.pp1.mj.runtime.disasm">
+            <arg value="test/obj/program.obj"/>
+            <arg value="-Djava.security.manager=allow"/>
+            <classpath>
+                <pathelement location="lib/mj-runtime.jar"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="run">
+        <java classname="rs.etf.pp1.mj.runtime.Run">
+            <arg value="-Djava.security.manager=allow"/>
+            <arg value="test/obj/program.obj"/>
+            <arg value="-debug"/>
+            <classpath>
+                <pathelement location="lib/mj-runtime.jar"/>
+            </classpath>
+        </java>
     </target>
 </project>

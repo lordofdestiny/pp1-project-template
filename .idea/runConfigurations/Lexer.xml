@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Lexer" type="Application" factoryName="Application">
+    <option name="ALTERNATIVE_JRE_PATH" value="liberica-17" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="MAIN_CLASS_NAME" value="rs.ac.bg.etf.pp1.MJLexerTest" />
+    <module name="ujavac" />
+    <method v="2">
+      <option name="AntTarget" enabled="true" antfile="file://$PROJECT_DIR$/build.xml" target="compile" />
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

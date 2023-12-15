@@ -37,6 +37,12 @@ public class SemanticPass extends VisitorAdaptor {
         report_impl(message, info, log::info);
     }
 
+    public void visit(PrintStmt print) {
+        if (print.getExpr().struct != Tab.intType && print.getExpr().struct != Tab.charType) {
+            report_error("Semantic error on line " + print.getLine() + ": only values of type int and char are printable", null);
+        }
+    }
+
     public void visit(VarDecl varDecl) {
         report_trace("Declared variable '" + varDecl.getVarName() + "' ", varDecl);
         Obj varNode = Tab.insert(Obj.Var, varDecl.getVarName(), varDecl.getType().struct);
@@ -47,7 +53,7 @@ public class SemanticPass extends VisitorAdaptor {
         Tab.openScope();
     }
 
-    public void visit(Program  program) {
+    public void visit(Program program) {
         nVars = Tab.currentScope().getnVars();
         Tab.chainLocalSymbols(program.getProgName().obj);
         Tab.closeScope();
@@ -95,6 +101,11 @@ public class SemanticPass extends VisitorAdaptor {
     public void visit(FuncCall funcCall) {
         Obj func = funcCall.getDesignator().obj;
         if (Obj.Meth == func.getKind()) {
+            if (Tab.noType == func.getType()) {
+                report_error("Semantic error: Function '" + func.getName() + "' return type is void.", null);
+                return;
+            }
+            report_trace("Detected function call of '" + func.getName() + "'on line " + funcCall.getLine(), null);
             funcCall.struct = func.getType();
         } else {
             report_error("Error on line " + funcCall.getLine() + ": name '" + func.getName() + "' is not a function", null);

@@ -55,4 +55,4 @@ import java_cup.runtime.Symbol;
 [0-9]+          {return new_symbol(sym.NUMBER, Integer.valueOf(yytext())); }
 [a-zA-Z][_a-zA-Z0-9]*      { return new_symbol(sym.IDENT, yytext()); }
 
-.   { System.err.println("Leksička greška (" + yytext() + ") na liniji " + (yyline+1)); }
+.   { System.err.println("Unrecognized symbol (" + yytext() + ") on line " + (yyline+1)); }
