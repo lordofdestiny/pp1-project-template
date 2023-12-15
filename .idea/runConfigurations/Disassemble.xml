@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Dissasemble" type="AntRunConfiguration">
+  <configuration default="false" name="Disassemble" type="AntRunConfiguration">
     <antsettings antfile="file://$PROJECT_DIR$/build.xml" target="disassemble-program" />
     <method v="2">
       <option name="Make" enabled="true" />
