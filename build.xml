@@ -2,6 +2,13 @@
 <project name="MJCompiler" default="compile-src" basedir=".">
     <property name="pp1Dir" value="src/rs/ac/bg/etf/pp1"/>
 
+    <target name="clean-logs">
+        <delete>
+            <fileset dir="logs" erroronmissingdir="false"/>
+            <dirset dir="logs" erroronmissingdir="false"/>
+        </delete>
+    </target>
+
     <target name="clean">
         <delete>
             <!-- Delete generated lexer/parser-->
@@ -21,6 +28,11 @@
             <!-- Delete output dir-->
             <fileset dir="out" erroronmissingdir="false"/>
             <dirset dir="out" erroronmissingdir="false"/>
+
+            <!-- Delete compiled test files-->
+            <fileset dir="test/obj">
+                <exclude name=".gitkeep"/>
+            </fileset>
         </delete>
     </target>
 
@@ -86,7 +98,7 @@
         <java classname="rs.etf.pp1.mj.runtime.Run">
             <arg value="-Djava.security.manager=allow"/>
             <arg value="test/obj/program.obj"/>
-             <arg value="-debug"/>
+            <arg value="-debug"/>
             <classpath>
                 <pathelement location="lib/mj-runtime.jar"/>
             </classpath>
