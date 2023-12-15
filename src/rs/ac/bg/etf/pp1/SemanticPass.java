@@ -8,7 +8,6 @@ import rs.etf.pp1.symboltable.concepts.*;
 import java.util.function.Consumer;
 
 public class SemanticPass extends VisitorAdaptor {
-
     Logger log = Logger.getLogger(getClass());
     boolean hadError = false;
     Obj currentMethod = null;
@@ -24,17 +23,23 @@ public class SemanticPass extends VisitorAdaptor {
         logFn.accept(msg.toString());
     }
 
-    public void report_error(String message, SyntaxNode info) {
+    private void report_error(String message, SyntaxNode info) {
         hadError = true;
         report_impl(message, info, log::error);
     }
 
-    public void report_trace(String message, SyntaxNode info) {
+    private void report_trace(String message, SyntaxNode info) {
         report_impl(message, info, log::trace);
     }
 
-    public void report_info(String message, SyntaxNode info) {
+    @SuppressWarnings("unused")
+    private void report_info(String message, SyntaxNode info) {
         report_impl(message, info, log::info);
+    }
+
+    public boolean containsErrors(Program program) {
+        program.traverseBottomUp(this);
+        return this.hadError;
     }
 
     public void visit(PrintStmt print) {
@@ -45,7 +50,7 @@ public class SemanticPass extends VisitorAdaptor {
 
     public void visit(VarDecl varDecl) {
         report_trace("Declared variable '" + varDecl.getVarName() + "' ", varDecl);
-        Obj varNode = Tab.insert(Obj.Var, varDecl.getVarName(), varDecl.getType().struct);
+        @SuppressWarnings("unused") Obj varNode = Tab.insert(Obj.Var, varDecl.getVarName(), varDecl.getType().struct);
     }
 
     public void visit(ProgName progName) {

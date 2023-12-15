@@ -1,11 +1,9 @@
 package rs.ac.bg.etf.pp1;
 
-import java_cup.runtime.Symbol;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import rs.ac.bg.etf.pp1.ast.Program;
-import rs.ac.bg.etf.pp1.exception.ParseException;
-import rs.ac.bg.etf.pp1.exception.UnexpectedSymbolException;
+import rs.ac.bg.etf.pp1.exception.*;
 import rs.ac.bg.etf.pp1.util.Log4JUtils;
 import rs.etf.pp1.symboltable.Tab;
 
@@ -42,17 +40,16 @@ public class MJSemanticTest {
 
             Tab.init();
             SemanticPass v = new SemanticPass();
-            prog.traverseBottomUp(v);
+            if (v.containsErrors(prog)) {
+                log.error("Semantic errors detected...");
+                System.exit(30);
+            }
 
             log.info("=".repeat(30));
             Tab.dump();
 
-            if (v.hadError) {
-                log.error("Semantic errors detected...");
-            } else {
-                log.info("All semantic checks passed");
-            }
-        } catch (rs.ac.bg.etf.pp1.exception.ParseException pe) {
+            log.info("All semantic checks passed");
+        } catch (ParseException pe) {
             System.exit(20);
         } catch (UnexpectedSymbolException us) {
             System.exit(10);

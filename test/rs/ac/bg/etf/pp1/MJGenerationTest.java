@@ -1,6 +1,5 @@
 package rs.ac.bg.etf.pp1;
 
-import java_cup.runtime.Symbol;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import rs.ac.bg.etf.pp1.ast.Program;
@@ -42,19 +41,19 @@ public class MJGenerationTest {
 
             Tab.init();
             SemanticPass v = new SemanticPass();
-            prog.traverseBottomUp(v);
+            if (v.containsErrors(prog)) {
+                log.error("Semantic errors detected...");
+                System.exit(30);
+            }
 
             log.info("=".repeat(30));
             Tab.dump();
-
-            if (v.hadError) {
-                log.error("Semantic errors detected...");
-                return;
-            }
             log.info("All semantic checks passed");
 
-            File objFile = new File("test/obj/program.obj");
+            log.info("=".repeat(30));
+            log.info("Generating code");
 
+            File objFile = new File("test/obj/program.obj");
             CodeGenerator codeGenerator = new CodeGenerator();
             prog.traverseBottomUp(codeGenerator);
             Code.dataSize = v.nVars;
