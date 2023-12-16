@@ -11,14 +11,14 @@ There several IntelliJ IDEA targets, including 3 JAR application tasks, 4 applic
 
 ## IntelliJ tasks
 
-### JAR application targets
+### JAR application tasks
 These targets assume that the input file exists. You will first need to generate `program.obj`.
 
 - **Run** - Runs `program.obj` using MicroJava VM
 - **Debug** - Exactly the same as **Run**, but adds passes `-d` flag to MicroJava VM to trigger the debug mode
 - **Dissasemble** - Runs  `disasm` class to dump the contents of the `program.obj` 
 
-### Application targets
+### Application tasks
 All application targets first run Ant **Build** task.
 
 - **Lexer** - Run the `MJLexerTest` program that runs the lexer step on the `program.mj`
@@ -26,7 +26,7 @@ All application targets first run Ant **Build** task.
 - **Semantic** - Runs the `MJSemanticTest` program that runs lexer, parser and semantic analysis steps on the `program.mj`
 - **Generation** - Runs the `MJGenerationTest` program that runs the whole compiler pipeline on `program.mj` and produces `program.obj` in the `tests/obj` folder
 
-### Ant IDEA targets
+### Ant IDEA tasks
 - **Compile**  - Directly calls only `compile-src` Ant target
 - **Build** - Directly calls only `compile-src` and `idea-build` Ant targets
 - **Clean** - Directly calls only `clean` Ant target
