@@ -4,6 +4,7 @@
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="rs.ac.bg.etf.pp1.MJGenerationTest" />
     <module name="ujavac" />
+    <option name="WORKING_DIRECTORY" value="$ProjectFileDir$" />
     <method v="2">
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Build" run_configuration_type="AntRunConfiguration" />
     </method>
