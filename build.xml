@@ -73,4 +73,6 @@
         </javac>
         <copy file="config/log4j.xml" todir="out/production/ujavac"/>
     </target>
+
+    <target name="idea-build"/>
 </project>

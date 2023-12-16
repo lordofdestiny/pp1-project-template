@@ -37,6 +37,7 @@ There is no need to run any of these targets manually, except for the **clean-lo
 - **clean** - Remove all generated `*.java` files and compiled `*.class` files as well as any other execution results
 - **clean-logs** - Delete all log files that were produced
 - **compile-src** - Generates parser and lexer classes from the `spec` files and then compiles all classes in the `src` directory. Depends on *clean*, *parserGen* and *lexerGen*
+- **idea-build** - Dummy task that enables calling IntelliJ IDEA built-in **Build** task at will by using it from an Ant Target
 - **lexerGen** - Generates lexer implementation files from `mjlexer.lex` specification file. It should be run after **parserGen**
 - **parserGen** - Generates parser implementation files from `mjparser.cup` specification file
 
