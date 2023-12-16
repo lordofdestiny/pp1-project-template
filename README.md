@@ -19,7 +19,9 @@ These targets assume that the input file exists. You will first need to generate
 - **Dissasemble** - Runs  `disasm` class to dump the contents of the `program.obj` 
 
 ### Application tasks
-All application targets first run Ant **Build** task.
+All application targets first run Ant **Build** task. Application tasks do not register the existence of test classes when
+the project loads if those classes contain errors. Because those classes use the lexer and the parser, first run the **Build**
+Ant task first. This is only required once per startup.
 
 - **Lexer** - Run the `MJLexerTest` program that runs the lexer step on the `program.mj`
 - **Parser** - Run the `MJParserTest` program that runs the lexer and parser steps on the `program.mj`
