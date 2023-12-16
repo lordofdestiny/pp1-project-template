@@ -4,10 +4,13 @@ This repository is a project template repository for the homework for the subjec
 
 This template is a reworked version of the template provided in class materials, but was adapted for use with IntelliJ IDEA code editor. It has additional Ant targets and Run targets added with the intent of making the development process more streamlined.
 
-Default impelenations of for any of four main steps are not complete and do not perform all required checks/requirements
+Default implementations of for any of four main steps are not complete and do not perform all required checks/requirements
 
 ## Project tasks
 There several IntelliJ IDEA targets, including 3 JAR application tasks, 4 application tasks and 3 Ant tasks. Those targets use Ant targets defined in `build.xml` and IntelliJ IDEA build step for easier development.
+
+There seems to be a bug with IntelliJ IDEA, where none of the tasks will run after some yet unknown event. To fix this,
+just reopen the project.
 
 ## IntelliJ tasks
 
