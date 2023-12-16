@@ -5,8 +5,7 @@
     <option name="MAIN_CLASS_NAME" value="rs.ac.bg.etf.pp1.MJGenerationTest" />
     <module name="ujavac" />
     <method v="2">
-      <option name="AntTarget" enabled="true" antfile="file://$PROJECT_DIR$/build.xml" target="compile-src" />
-      <option name="Make" enabled="true" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Build" run_configuration_type="AntRunConfiguration" />
     </method>
   </configuration>
 </component>

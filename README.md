@@ -1,21 +1,25 @@
-# PP1 project template
+# PP1 Project Template
 
 This repository is a project template repository for the homework for the subject "Programski prevodioci 1" on the Faculty of electrical enigneering in Belgrade. 
 
 This template is a reworked version of the template provided in class materials, but was adapted for use with IntelliJ IDEA code editor. It has additional Ant targets and Run targets added with the intent of making the development process more streamlined.
 
-In order to use Ant targets, it is recommended to install IntelliJ IDEA [Ant Plugin](https://plugins.jetbrains.com/plugin/23025-ant?_ga=2.245260870.238897384.1702670743-556405651.1695306650&_gac=1.196130014.1699039179.Cj0KCQjwtJKqBhCaARIsAN_yS_kG83icSxF51QENNtogRzS6sDU1zCOHYArIcpIG2onsTaDbCnpd9ncaAvuxEALw_wcB&_gl=1%2Apppaah%2A_ga%2ANTU2NDA1NjUxLjE2OTUzMDY2NTA.%2A_ga_9J976DJZ68%2AMTcwMjY3MDc0Mi4zMy4wLjE3MDI2NzA3NDMuNTkuMC4w). 
-There is no need to install Appache Ant separately, since it comes bundled with IntelliJ IDEA. This was atleast the case for with my version IntelliJ IDEA Ultimate 2023.3.
-
 Default impelenations of for any of four main steps are not complete and do not perform all required checks/requirements
 
-# Project targets
-There several IntelliJ IDEA targets, including 4 Application targets and 4 Ant targets. Those targets use Ant targets defined in `build.xml` and IntelliJ IDEA build step for easier development.
+## Project tasks
+There several IntelliJ IDEA targets, including 3 JAR application tasks, 4 application tasks and 3 Ant tasks. Those targets use Ant targets defined in `build.xml` and IntelliJ IDEA build step for easier development.
 
-## IDEA targets
+## IntelliJ tasks
+
+### JAR application targets
+These targets assume that the input file exists. You will first need to generate `program.obj`.
+
+- **Run** - Runs `program.obj` using MicroJava VM
+- **Debug** - Exactly the same as **Run**, but adds passes `-d` flag to MicroJava VM to trigger the debug mode
+- **Dissasemble** - Runs  `disasm` class to dump the contents of the `program.obj` 
 
 ### Application targets
-All aplication targets first run Ant **compile-src** target
+All application targets first run Ant **Build** task.
 
 - **Lexer** - Run the `MJLexerTest` program that runs the lexer step on the `program.mj`
 - **Parser** - Run the `MJParserTest` program that runs the lexer and parser steps on the `program.mj`
@@ -23,20 +27,18 @@ All aplication targets first run Ant **compile-src** target
 - **Generation** - Runs the `MJGenerationTest` program that runs the whole compiler pipeline on `program.mj` and produces `program.obj` in the `tests/obj` folder
 
 ### Ant IDEA targets
+- **Compile**  - Directly calls only `compile-src` Ant target
+- **Build** - Directly calls only `compile-src` and `idea-build` Ant targets
 - **Clean** - Directly calls only `clean` Ant target
-- **Run** - Builds the complete application, runs the **Generate** target, and then runs Ant `run-program` target that runs `program.obj` using MicroJava VM
-- **Debug** - Exactly the same as **Run**, but adds passes `-d` flag to MicroJava VM to trigger the debug mode
-- **Dissasemble** - Builds the complete application, runs the **Generate** target and then runs Ant `dissasemble-program` target that uses `disasm` classt to dump the contents of the `program.obj` 
 
 ## *Ant targets*
+There is no need to run any of these targets manually, except for the **clean-logs** target
+
 - **clean** - Remove all generated `*.java` files and compiled `*.class` files as well as any other execution results
 - **clean-logs** - Delete all log files that were produced
 - **compile-src** - Generates parser and lexer classes from the `spec` files and then compiles all classes in the `src` directory. Depends on *clean*, *parserGen* and *lexerGen*
-- **debug-program** - Runs MicroJava VM with `-d` flag for debugging on `program.obj`
-- **disassemble-program** - Runs `disasm` class on `program.obj`
-- **lexerGen** - Generates lexer implementation files from `mjlexer.lex` specification file. It should be run after *parserGen*
+- **lexerGen** - Generates lexer implementation files from `mjlexer.lex` specification file. It should be run after **parserGen**
 - **parserGen** - Generates parser implementation files from `mjparser.cup` specification file
-- **run-program** - Runs MicroJava VM on `program.obj`
 
 ## Project structure
 
@@ -61,3 +63,12 @@ All aplication targets first run Ant **compile-src** target
 -  `rs.ac.bg.etf.pp1.ast` - Classes generated for AST description by the parser generator are placed here. This package is not present initially, before the `compile-src` is run
 -  `rs.ac.bg.etf.pp1.exception` - Any exception classes required by the implementation are meant to be placed here
 -  `rs.ac.bg.etf.pp1.util` - Utility package. Any utility classes are meant to be placed here
+
+## Compatibility
+In order to use Ant targets, it is recommended to install IntelliJ IDEA [Ant Plugin](https://plugins.jetbrains.com/plugin/23025-ant?_ga=2.245260870.238897384.1702670743-556405651.1695306650&_gac=1.196130014.1699039179.Cj0KCQjwtJKqBhCaARIsAN_yS_kG83icSxF51QENNtogRzS6sDU1zCOHYArIcpIG2onsTaDbCnpd9ncaAvuxEALw_wcB&_gl=1%2Apppaah%2A_ga%2ANTU2NDA1NjUxLjE2OTUzMDY2NTA.%2A_ga_9J976DJZ68%2AMTcwMjY3MDc0Mi4zMy4wLjE3MDI2NzA3NDMuNTkuMC4w). 
+
+There is no need to install Appache Ant separately, since it comes bundled with IntelliJ IDEA. This was at least the case for with my version IntelliJ IDEA Ultimate 2023.3.
+
+All targets were tested with Java JDK 17. Higher versions (for example JDK 19) are likely incompatible because of the changes to the status `SecurityManager` class.
+When running precompiled classes from `mj-runtime.jar` library, special flags are needed to enable the deprecated class. Higher versions of the JDK completely
+disable this class, and an exception is thrown. All targets set this flag already, so there is no additional action needed.
